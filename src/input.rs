@@ -2,7 +2,7 @@ use reqwest::{blocking::Client, header::{COOKIE, HeaderMap, HeaderValue, USER_AG
 use std::{env, fs::{read_to_string, File}, io::Write};
 
 const URL: &str = "https://adventofcode.com";
-const YEAR: &str = "2024";
+const YEAR: &str = "2025";
 
 pub fn get_input(day: &str, test: bool) -> String {
     match test {
