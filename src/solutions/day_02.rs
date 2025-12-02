@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 pub fn solve_part_one(input: &str) -> usize {
     let ranges = get_ranges(input);
     let mut sum = 0;
@@ -34,7 +36,38 @@ pub fn solve_part_one(input: &str) -> usize {
 }
 
 pub fn solve_part_two(input: &str) -> usize {
-    todo!()
+    let ranges = get_ranges(input);
+    let mut ids = HashSet::new();
+
+    for range in ranges {
+        let mut repeats = 2;
+
+        loop {
+            let mut pattern = 1;
+
+            loop {
+                let id = pattern.to_string().repeat(repeats).parse::<u64>().unwrap();
+
+                if id > range.1 {
+                    break;
+                }
+    
+                if id >= range.0 {
+                    ids.insert(id);
+                }
+    
+                pattern += 1;
+            }
+
+            repeats += 1;
+
+            if repeats as u32 > range.1.ilog10() + 1 {
+                break;
+            }
+        }
+    }
+
+    ids.into_iter().sum::<u64>() as usize
 }
 
 fn get_ranges(input: &str) -> impl Iterator<Item = (u64, u64)> {
@@ -61,7 +94,7 @@ mod tests {
 
     #[test]
     fn part_two() {
-        let expected = 0;
+        let expected = 4174379265;
 
         assert_eq!(solve_part_two(INPUT), expected);
     }
