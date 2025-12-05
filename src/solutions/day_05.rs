@@ -7,14 +7,31 @@ pub fn solve_part_one(input: &str) -> usize {
 }
 
 pub fn solve_part_two(input: &str) -> usize {
-    let (ranges, _ids) = get_ids(input);
-    let mut sum = 0;
+    let (mut ranges, _ids) = get_ids(input);
 
-    for range in ranges.iter() {
-        // range.co
+    for index in 0..ranges.len() {
+        for other_index in 0..ranges.len() {
+            if other_index == index {
+                continue;
+            }
+
+            let other_range = ranges[other_index].clone();
+
+            if other_range.contains(ranges[index].start()) {
+                let start = other_range.end() + 1;
+                let end = ranges[index].end();
+                ranges[index] = RangeInclusive::new(start, *end);
+            }
+
+            if other_range.contains(ranges[index].end()) {
+                let start = ranges[index].start();
+                let end = other_range.start() - 1;
+                ranges[index] = RangeInclusive::new(*start, end);
+            }
+        }
     }
 
-    sum
+    ranges.into_iter().map(|range| range.count()).sum()
 }
 
 fn get_ids(input: &str) -> (Vec<RangeInclusive<usize>>, impl Iterator<Item = usize>) {
