@@ -50,7 +50,47 @@ pub fn solve_part_one(input: &str) -> usize {
 }
 
 pub fn solve_part_two(input: &str) -> usize {
-    todo!()
+    let mut sum = 0;
+
+    let mut problem_result = 0;
+    let mut op = Op::Add;
+
+    for column in 0..=input.lines().next().unwrap().len() {
+        if input.lines().all(|line| line.chars().nth(column).unwrap_or(' ') == ' ') {
+            sum += problem_result;
+            problem_result = 0;
+            continue;
+        }
+
+        op = match input.lines().last().unwrap().chars().nth(column).unwrap_or(' ') {
+            '+' => {
+                problem_result = 0;
+                Op::Add
+            },
+            '*' => {
+                problem_result = 1;
+                Op::Multiply
+            },
+            _ => op,
+        };
+
+        let number = input.lines()
+            .map(|line| line.chars().nth(column).unwrap_or(' '))
+            .filter(|char| char.is_numeric())
+            .collect::<String>()
+            .parse::<usize>().unwrap();
+
+        match op {
+            Op::Add => problem_result += number,
+            Op::Multiply => problem_result *= number,
+        };
+    }
+
+    if problem_result != 0 {
+        sum += problem_result;
+    }
+
+    sum
 }
 
 fn get_problems(input: &str) -> Problems<impl Iterator<Item = Item>> {
@@ -75,11 +115,11 @@ mod tests {
     use super::*;
 
     const INPUT: &str = "\
-        123 328  51 64\n\
-         45 64  387 23\n\
-          6 98  215 314\n\
-        *   +   *   +\n\
-    ";
+123 328  51 64
+ 45 64  387 23
+  6 98  215 314
+*   +   *   +
+";
 
     #[test]
     fn part_one() {
@@ -90,7 +130,7 @@ mod tests {
 
     #[test]
     fn part_two() {
-        let expected = 0;
+        let expected = 3263827;
 
         assert_eq!(solve_part_two(INPUT), expected);
     }
