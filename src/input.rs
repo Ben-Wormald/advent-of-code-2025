@@ -42,7 +42,7 @@ fn get_client() -> Client {
     );
     headers.insert(
         USER_AGENT,
-        HeaderValue::from_static("https://github.com/Ben-Wormald/advent-of-code-2024"),
+        HeaderValue::from_static("https://github.com/Ben-Wormald/advent-of-code-2025"),
     );
 
     Client::builder()
